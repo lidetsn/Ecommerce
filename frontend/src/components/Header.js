@@ -1,6 +1,6 @@
 import React from 'react'
 import {LinkContainer} from "react-router-bootstrap"// this does the same aas Link but rap the nave bar
-import {Container, Row, Col,Navbar,Nav} from "react-bootstrap"
+import {Container,Navbar,Nav} from "react-bootstrap"
 
 
 const Header = () => {
