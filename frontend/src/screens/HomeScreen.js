@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react'
+import React,{useEffect} from 'react'
 import {useDispatch,useSelector} from "react-redux"
 import {Row,Col} from "react-bootstrap"
 // import products from "../products"
@@ -12,6 +12,7 @@ const HomeScreen = () => {
     // const [products,setProducts]=useState([])
     const dispatch = useDispatch()
     const productList=useSelector(state=>state.productList)
+    // console.log(productList)
     const {loading,error,products}=productList
     useEffect(()=>{
         dispatch(listProducts())

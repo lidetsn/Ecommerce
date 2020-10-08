@@ -8,7 +8,9 @@ import {PRODUCT_LIST_REQUEST,
     from "../constants/productConstants"
 
     export const listProducts=()=>async(dispatch)=>{
+        console.log("inside action")
         try {
+          
             dispatch({type:PRODUCT_LIST_REQUEST})
             const {data}=await  axios.get("/api/products")
 

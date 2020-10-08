@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import {Link} from "react-router-dom"
 import {useDispatch,useSelector} from "react-redux"
-import {Row,Col,Image,ListGroup,Card,Button} from "react-bootstrap"
+import {Row,Col,Image,ListGroup,Card,Button,Form} from "react-bootstrap"
 import Rating from "../components/Rating"
 //import axios from "axios"
 import {listProductDetails} from "../actions/productActions"
@@ -10,8 +10,10 @@ import Loader from "../components/Loader"
 
 //import products from "../products"
 
-const ProductScreen = ({match}) => {
+const ProductScreen = ({history,match}) => {
         // const [product,setProduct]=useState({})
+        // since quantity is component level state we use useState not redux for it
+       const [qty,setQty]=useState(1)
          const dispatch=useDispatch()
          const productDetails=useSelector(state=>state.productDetails)
          const {loading ,error,product}=productDetails
@@ -26,7 +28,10 @@ const ProductScreen = ({match}) => {
             //     fetchProduct()
         },[dispatch,match])//add match here to avod warning in running server 
     //   const product=products.find(p=>p._id===match.params.id)
+const addToCardHandler=()=>{
+    history.push(`/cart/${match.params.id}?qty=${qty}`)
 
+}
     return (
         <>
         <Link className="btn btn-light my-3" to="/">Go back</Link>
@@ -78,8 +83,23 @@ const ProductScreen = ({match}) => {
                                 </Col>                          
                             </Row>
                         </ListGroup.Item>
+                        {product.countInStock>0 && (
+                            <ListGroup.Item>
+                                <Row>
+                                    <Col>Qty</Col>
+                                    <Col>
+                                    </Col>
+                                </Row>
+                            </ListGroup.Item>
+                        )}
                         <ListGroup.Item>
-                            <Button className="btn-block" type ="Button" disabled={product.countInStock===0}>add To Cart</Button>
+                            <Button 
+                                 onClick={addToCardHandler}
+                                className="btn-block" 
+                                type ="Button" 
+                                disabled={product.countInStock===0}>
+                                 add To Cart
+                                </Button>
                         </ListGroup.Item>
                     </ListGroup>
                 </Card>
