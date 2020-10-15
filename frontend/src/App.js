@@ -12,6 +12,9 @@ import ProfileScreen from "./screens/ProfileScreen"
 import ShippingScreen from "./screens/ShippingScreen"
 import PaymentMethodScreen from "./screens/PaymentMethodScreen"
 import PlaceOrderScreen from "./screens/PlaceOrderScreen"
+import OrderScreen from "./screens/OrderScreen"
+
+
 //import './App.css';
 
 function App() {
@@ -25,6 +28,8 @@ function App() {
          <Route path='/shipping' component={ShippingScreen}/>
          <Route path='/payment' component={PaymentMethodScreen}/>
          <Route path='/placeorder' component={PlaceOrderScreen}/>
+         <Route path='/order/:id' component={OrderScreen}/>
+
          <Route path='/register' component={RegisterScreen}/>
          <Route path='/profile' component={ProfileScreen}/>
          <Route path='/product/:id' component={ProductScreen }/>

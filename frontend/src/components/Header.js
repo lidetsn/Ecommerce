@@ -3,6 +3,7 @@ import {useDispatch,useSelector} from "react-redux"
 import {LinkContainer} from "react-router-bootstrap"// this does the same aas Link but rap the nave bar
 import {Container,Navbar,Nav, NavDropdown} from "react-bootstrap"
 import {logout} from '../actions/userActions'
+import { Redirect } from 'react-router-dom'
 
 
 const Header = () => {
@@ -12,6 +13,7 @@ const Header = () => {
 
   const logoutHandler=()=>{
     dispatch(logout())
+    Redirect("/")
   }
     return (
       
@@ -29,14 +31,17 @@ const Header = () => {
 
                     </LinkContainer>
                     {/* <Nav.Link href="/cart" ><i className="fas fa-shopping-cart"></i>Cart</Nav.Link> */}
-                     {userInfo?(<NavDropdown title={userInfo.name} id="username">
-                       <LinkContainer to="/profile">
-                         <NavDropdown.Item>profile</NavDropdown.Item>
-                       </LinkContainer>
-                       <NavDropdown.Item onClick={logoutHandler}>
-                         Logout
-                       </NavDropdown.Item>
-                     </NavDropdown>):
+                     {userInfo?
+                           (<NavDropdown title={userInfo.name} id="username">
+                                <LinkContainer to="/profile">
+                                      <NavDropdown.Item>profile</NavDropdown.Item>
+                                </LinkContainer>
+                                <LinkContainer to="/">
+                                    <NavDropdown.Item onClick={logoutHandler}>
+                                      Logout
+                                    </NavDropdown.Item>
+                              </LinkContainer>
+                          </NavDropdown>):
                      <LinkContainer to="/login">
                      <Nav.Link><i className="fas fa-user"></i>Sign In</Nav.Link>
                      </LinkContainer>
