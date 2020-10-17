@@ -1,19 +1,20 @@
-import React from 'react'
+import React  from 'react'
 import {useDispatch,useSelector} from "react-redux"
 import {LinkContainer} from "react-router-bootstrap"// this does the same aas Link but rap the nave bar
 import {Container,Navbar,Nav, NavDropdown} from "react-bootstrap"
 import {logout} from '../actions/userActions'
-import { Redirect } from 'react-router-dom'
 
 
-const Header = () => {
+
+const Header = ({history}) => {
+  console.log(history)
   const dispatch=useDispatch()
   const userLogin=useSelector(state=>state.userLogin)
   const {userInfo}=userLogin
 
   const logoutHandler=()=>{
     dispatch(logout())
-    Redirect("/")
+    
   }
     return (
       
@@ -41,11 +42,29 @@ const Header = () => {
                                       Logout
                                     </NavDropdown.Item>
                               </LinkContainer>
-                          </NavDropdown>):
+                          </NavDropdown>):(
                      <LinkContainer to="/login">
                      <Nav.Link><i className="fas fa-user"></i>Sign In</Nav.Link>
                      </LinkContainer>
-                     }
+                            )  }
+                            {userInfo && userInfo.isAdmin && (
+                                   <NavDropdown title="Admin" id="adminmenu">
+                                   <LinkContainer to="/admin/userlist">
+                                         <NavDropdown.Item>Users</NavDropdown.Item>
+                                   </LinkContainer>
+                                   <LinkContainer to="/admin/productlist">
+                                       <NavDropdown.Item>
+                                         Products
+                                       </NavDropdown.Item>
+                                 </LinkContainer>
+                                 <LinkContainer to="/admin/orderlist">
+                                       <NavDropdown.Item>
+                                         Orders
+                                       </NavDropdown.Item>
+                                 </LinkContainer>
+                             </NavDropdown>
+
+                            )}
                     
                     {/* <Nav.Link href="/login"><i className="fas fa-user"></i>Sign In</Nav.Link> */}
                   </Nav>

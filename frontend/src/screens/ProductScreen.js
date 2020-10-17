@@ -4,7 +4,7 @@ import {useDispatch,useSelector} from "react-redux"
 import {Row,Col,Image,ListGroup,Card,Button,Form} from "react-bootstrap"
 import Rating from "../components/Rating"
 //import axios from "axios"
-import {listProductDetails} from "../actions/productActions"
+import {listProductDetails,backToProducts} from "../actions/productActions"
 import Message from "../components/Message"
 import Loader from "../components/Loader"
 
@@ -32,9 +32,12 @@ const addToCardHandler=()=>{
     history.push(`/cart/${match.params.id}?qty=${qty}`)
 
 }
+const handleProdctDetail =()=>{
+    dispatch(backToProducts())
+}
     return (
         <>
-        <Link className="btn btn-light my-3" to="/">Go back</Link>
+        <Link className="btn btn-light my-3" to="/" onClick={handleProdctDetail}>Go back</Link>
         {loading?(
            <Loader/>
          ):error?(

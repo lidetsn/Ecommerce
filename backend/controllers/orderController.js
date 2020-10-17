@@ -89,6 +89,31 @@ const updateOrderToPaid=async (req,res,next)=>{
       }
 }
 
+//update order to paid
+//get/api/orders/:id/deliver
+//private/admin
+const updateOrderToDelivered=async (req,res,next)=>{
+    try {
+        // console.log(req.params.id)
+        const order=await Order.findById(req.params.id)
+      if(order){
+          order.isDelivered=true
+          order.deliveredAt=Date.now()
+          
+          const updatedOrder=await order.save()
+          res.json(updatedOrder)
+      }
+      else{
+          res.status(404)
+          throw new Error("Order Not found")
+      }
+             
+      } catch (error) {
+         console.log(error.message)
+         next(error)
+        //  res.status(401).json(error) 
+      }
+}
 //get logged in user order
 const getMyOrders=async (req,res,next)=>{
     try {
@@ -107,11 +132,11 @@ const getMyOrders=async (req,res,next)=>{
 
     }
 
-/*
-const getOrder=async (req,res,next)=>{
+
+const getOrders=async (req,res,next)=>{
     try {
         
-        const order=await Order.find({})
+        const order=await Order.find({}).populate("user","id name")
       if(order){
           res.json(order)
       }
@@ -125,5 +150,10 @@ const getOrder=async (req,res,next)=>{
         //  res.status(401).json(error) 
       }
 }
-*/
-export {addOrderItems,getOrderById,updateOrderToPaid,getMyOrders}
+
+export {addOrderItems,
+        getOrderById,
+        updateOrderToPaid,
+        getMyOrders,
+        getOrders,
+        updateOrderToDelivered}

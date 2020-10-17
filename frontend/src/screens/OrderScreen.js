@@ -2,12 +2,12 @@ import React,{useState,useEffect} from 'react'
 import axios from "axios"
 import {PayPalButton} from "react-paypal-button-v2"
 import {Link} from "react-router-dom"
-import {Row,Col,ListGroup,Image,Card } from "react-bootstrap"
+import {Row,Col,ListGroup,Image,Card, Button } from "react-bootstrap"
 import {useDispatch,useSelector} from "react-redux"
 import Message from "../components/Message"
 import Loader from "../components/Loader"
-import {getOrderDetails, payOrder} from "../actions/orderAction"
-import {ORDER_PAY_RESET} from "../constants/orderConstants"
+import {getOrderDetails, payOrder,deliverOrder} from "../actions/orderAction"
+import {ORDER_DELIVER_RESET, ORDER_PAY_RESET} from "../constants/orderConstants"
 
 const OrderScreen = ({match}) => {
     const orderId=match.params.id
@@ -21,6 +21,12 @@ const OrderScreen = ({match}) => {
     const orderPay=useSelector(state=>state.orderPay)
     const {loading:loadingpay,success:successPay}=orderPay
 
+    const orderDeliver=useSelector(state=>state.orderDeliver)
+    const {loading:loadingDeliver,success:successDeliver}=orderDeliver
+            
+            //added feature ===========
+            const userLogin=useSelector(state=>state.userLogin)
+            const {userInfo}=userLogin
 
     if (!loading) {
         //   Calculate prices
@@ -44,8 +50,9 @@ const OrderScreen = ({match}) => {
             }
             document.body.appendChild(script)
           }
-        if(!order || successPay) {
+        if(!order || successPay || successDeliver) {
             dispatch({type:ORDER_PAY_RESET})
+            dispatch({type:ORDER_DELIVER_RESET})
             dispatch(getOrderDetails(orderId))
         }
         else if(!order.isPaid){
@@ -56,11 +63,15 @@ const OrderScreen = ({match}) => {
                 setSdkReady(true)
             }
         }
-    }, [dispatch,order,orderId,successPay]) 
+    }, [dispatch,order,orderId,successPay,successDeliver]) 
 
     const sucessPaymentHndler=(paymentResult)=>{
         console.log(paymentResult)
         dispatch(payOrder(orderId,paymentResult))
+    }
+
+    const deliverHandeler=(e)=>{
+        dispatch(deliverOrder(order))
     }
 
 return loading?<Loader/>:error?<Message variant="danager">{error}
@@ -91,7 +102,7 @@ return loading?<Loader/>:error?<Message variant="danager">{error}
                            </ListGroup.Item>
                            <ListGroup.Item>
                                <h1>Payment method</h1>
-                               <p>                               <strong>Method:</strong>
+                               <p>   <strong>Method:</strong>
                                {order.paymentMethod}
                                </p>
                      {order.isPaid?(<Message variant="success"> paid on{order.paidAt}</Message>):(
@@ -155,7 +166,9 @@ return loading?<Loader/>:error?<Message variant="danager">{error}
                                   <Col>${order.totalPrice}</Col>
                               </Row>
                           </ListGroup.Item>
-                              {!order.isPaid &&(
+                          {/* because i use the same order screen to show detail to user and admin 
+                           i use !userInfo.isAdmin to hide the payment fom the admin view */}
+                              {!order.isPaid && !userInfo.isAdmin &&(
                                   <ListGroup.Item>
                                       {loadingpay &&<Loader/>}
                                       {!sdkReady?<Loader/>:(
@@ -165,6 +178,14 @@ return loading?<Loader/>:error?<Message variant="danager">{error}
                                       )}
                                   </ListGroup.Item>
                               )}    
+                                {loadingDeliver &&<Loader/>}
+                                {order.isPaid && userInfo.isAdmin && !order.isDelivered &&(
+                                  <ListGroup.Item>
+                                     <Button type="button" className="btn btn-block" onClick={deliverHandeler}>
+                                         Mark as Delivered
+                                     </Button>
+                                  </ListGroup.Item>
+                              )}
                          
                       </ListGroup>
                   </Card>

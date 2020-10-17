@@ -78,7 +78,7 @@ const getUserProfile=async (req,res,next)=>{
         }
         res.json(req.user)
     } catch (error) {
-        
+        next(error)
     }
    
 }
@@ -109,10 +109,109 @@ const updateUserProfile=async (req,res,next)=>{
         }
         res.json(req.user)
     } catch (error) {
+        next(error)
+    }
+   
+}
+//get all users
+//get/api/users
+//private admin
+const getUsers=async (req,res,next)=>{
+    try {
+        const users=await User.find({})
+       if(users){
+            res.json(users)
+
+         }else{
+            res.status(404)
+             throw new Error("User not found")
+         }
         
+    } catch (error) {
+       next(error) 
+    }
+   
+}
+//get user by id
+//get/api/users/:id
+//privat/admi
+const getUserById=async (req,res,next)=>{
+    try {
+        const user=await User.findById(req.params.id).select("-password")
+       if(user){
+            res.json(user)
+
+         }else{
+            res.status(404)
+             throw new Error("User not found")
+         }
+        
+    } catch (error) {
+       next(error) 
     }
    
 }
 
+//update user 
+//put//api/users/:id
+//private /admin   this update is done by the admin
+const updateUser=async (req,res,next)=>{
+    try {
+        const user=await User.findById(req.params.id)
+        if(user){
+            user.name=req.body.name ||user.name
+            user.email=req.body.email||user.email
+            user.isAdmin=req.body.isAdmin ===undefined?user.isAdmin:req.body.isAdmin  
+          
+            
 
-export {authUser, getUserProfile,registerUser,updateUserProfile}
+            const updatedUser=await user.save()
+            res.json({
+                _id:updatedUser._id,
+                name:updatedUser.name,
+                email:updatedUser.email,
+                isAdmin:updatedUser.isAdmin,
+                
+
+            })
+            
+        }
+
+        else{
+            res.status(404)
+            throw new Error("User not found")
+        }
+        res.json(req.user)
+    } catch (error) {
+        next(error)
+    }
+   
+}
+// delete a user
+//private /admin
+const deleteUser=async (req,res,next)=>{
+    try {
+        const user=await User.findById(req.params.id)
+       if(user){
+           await user.remove()
+            res.json({message:"user removed"})
+
+         }else{
+            res.status(404)
+             throw new Error("User not found")
+         }
+        
+    } catch (error) {
+       next(error) 
+    }
+   
+}
+
+export {authUser, 
+       getUserProfile,
+      registerUser,
+      updateUserProfile,
+      getUsers,
+      deleteUser,
+      getUserById,
+      updateUser}

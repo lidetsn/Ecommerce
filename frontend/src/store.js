@@ -1,16 +1,27 @@
-import {createStore,combineReducers,applyMiddleware} from "redux"
+import {createStore,
+        combineReducers,
+        applyMiddleware} from "redux"
 import thunk from "redux-thunk"
 import {composeWithDevTools} from "redux-devtools-extension"
-import {productListReducer,productDetailsReducer} from "./reducers/productReducers"
+import {productListReducer,
+        productDetailsReducer,
+        productDeleteReducer,
+        productCreateReducer,
+        productUpdateReducer} from "./reducers/productReducers"
 import {cartReducer} from "./reducers/cartReducers"
 import {userLoginReducer,
         userRegisterReducer,
         userDetailReducer,
-        userUpdateProfileReducer} from "./reducers/userReducers"
+        userUpdateProfileReducer,
+        userListReducer,
+        userDeleteReducer,
+        userUpdateReducer} from "./reducers/userReducers"
 import {orderCreateReducer,
         orderDetailsReducer,
         orderPayReducer,
-        orderListMyReducer} from "./reducers/orderReducers"
+        orderListMyReducer,
+        orderListAdminReducer,
+        orderDeliverReducer} from "./reducers/orderReducers"
 
 
 const reducer=combineReducers({productList:productListReducer ,
@@ -23,7 +34,17 @@ const reducer=combineReducers({productList:productListReducer ,
                                orderCreate:orderCreateReducer,
                                orderDetails:orderDetailsReducer,
                                orderPay:orderPayReducer,
-                              orderListMy:orderListMyReducer})
+                               orderListMy:orderListMyReducer,
+                               orderListAdmin:orderListAdminReducer,
+                               orderDeliver:orderDeliverReducer,
+                               userList:userListReducer,
+                               userDelete:userDeleteReducer,
+                               userUpdate:userUpdateReducer,
+                               productDelete:productDeleteReducer,
+                               productCreate:productCreateReducer,
+                               productUpdate:productUpdateReducer,
+
+                               })
 
 const cartItemsFromStorage=localStorage.getItem("cartItems")?JSON.parse(localStorage.getItem("cartItems")):[]
 const userInfoFromStorage=localStorage.getItem("userInfo")?JSON.parse(localStorage.getItem("userInfo")):null

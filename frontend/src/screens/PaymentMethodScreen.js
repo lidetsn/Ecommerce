@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import {Form,Button,Col } from "react-bootstrap"
 import {useDispatch,useSelector} from "react-redux"
 import FormContainer from "../components/FormContainer"
@@ -25,7 +25,18 @@ const PaymentMethodScreen = ({history}) => {
           history.push("/placeorder")
             
         }
-
+        const userLogin=useSelector(state=>state.userLogin)
+        const {userInfo}=userLogin
+      
+    
+        useEffect(()=>{
+            if(!userInfo)
+            {
+                history.push("/login")
+            }
+           
+        },[history,userInfo])
+    
     return (
         <FormContainer>
             <CheckoutSteps step1 step2 step3 ></CheckoutSteps>

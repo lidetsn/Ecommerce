@@ -25,13 +25,24 @@ cart.totalPrice=addDecimals(Number(cart.itemsPrice)+Number(cart.shippingPrice)+N
 
 const orderCreate=useSelector(state=>state.orderCreate)
 const {order,success,error}=orderCreate
+const userLogin=useSelector(state=>state.userLogin)
+const {userInfo}=userLogin
 
 useEffect(()=>{
+     
+        if(!userInfo)
+        {
+            history.push("/login")
+        }
+       
+ 
           if(success){
               history.push(`/order/${order._id}`)
           }
 // eslint-disable-next-line
 },[history,success])
+
+
 const placeOrderHandler=()=>{
     dispatch(createOrder({
                  orderItems:cart.cartItems,
