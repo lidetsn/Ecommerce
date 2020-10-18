@@ -9,7 +9,7 @@ import Loader from "../components/Loader"
 import {getOrderDetails, payOrder,deliverOrder} from "../actions/orderAction"
 import {ORDER_DELIVER_RESET, ORDER_PAY_RESET} from "../constants/orderConstants"
 
-const OrderScreen = ({match}) => {
+const OrderScreen = ({match,history}) => {
     const orderId=match.params.id
 
     const [sdkReady,setSdkReady]=useState(false)
@@ -28,8 +28,10 @@ const OrderScreen = ({match}) => {
             const userLogin=useSelector(state=>state.userLogin)
             const {userInfo}=userLogin
 
-    if (!loading) {
+    if (!loading && !error ) {
         //   Calculate prices
+        console.log(loading)
+        console.log(order)
         const addDecimals = (num) => {
           return (Math.round(num * 100) / 100).toFixed(2)
         }
@@ -39,6 +41,9 @@ const OrderScreen = ({match}) => {
         )
       }
       useEffect(() => {
+          if(!userInfo){
+              history.push("/login")
+          }
         const addPayPalScript = async () => {
             const { data: clientId } = await axios.get('/api/config/paypal')
             const script = document.createElement('script')
@@ -63,7 +68,7 @@ const OrderScreen = ({match}) => {
                 setSdkReady(true)
             }
         }
-    }, [dispatch,order,orderId,successPay,successDeliver]) 
+    }, [dispatch,order,orderId,successPay,successDeliver,history,userInfo]) 
 
     const sucessPaymentHndler=(paymentResult)=>{
         console.log(paymentResult)
@@ -179,7 +184,7 @@ return loading?<Loader/>:error?<Message variant="danager">{error}
                                   </ListGroup.Item>
                               )}    
                                 {loadingDeliver &&<Loader/>}
-                                {order.isPaid && userInfo.isAdmin && !order.isDelivered &&(
+                                {userInfo && userInfo.isAdmin && order.isPaid &&  !order.isDelivered &&(
                                   <ListGroup.Item>
                                      <Button type="button" className="btn btn-block" onClick={deliverHandeler}>
                                          Mark as Delivered

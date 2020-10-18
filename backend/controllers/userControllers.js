@@ -76,7 +76,7 @@ const getUserProfile=async (req,res,next)=>{
             res.status(404)
             throw new Error("User not found")
         }
-        res.json(req.user)
+    
     } catch (error) {
         next(error)
     }

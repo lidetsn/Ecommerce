@@ -3,7 +3,8 @@ import {getProducts,
         getProductById,
         deleteProduct,
         createProduct,
-       updateProduct} from "../controllers/productController.js"
+       updateProduct,
+       createProductReviews} from "../controllers/productController.js"
 import {protect,admin} from "../middleware/authMiddleware.js"
 
 
@@ -17,6 +18,9 @@ const router=express.Router()
                    .get(getProductById)
                    .delete(protect,admin,deleteProduct)
                    .put(protect,admin,updateProduct)
+
+    router.route("/:id/reviews")
+                                .post(protect,createProductReviews)
 
   
     

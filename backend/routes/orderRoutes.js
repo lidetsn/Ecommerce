@@ -1,7 +1,12 @@
 import express from "express"
 
 
-import {addOrderItems,getOrderById,updateOrderToPaid,getMyOrders,getOrders,updateOrderToDelivered} from "../controllers/orderController.js"
+import {addOrderItems,
+        getOrderById,
+        updateOrderToPaid,
+        getMyOrders,
+        getOrders,
+        updateOrderToDelivered} from "../controllers/orderController.js"
 import {protect,admin} from "../middleware/authMiddleware.js"
 
 const router=express.Router()
